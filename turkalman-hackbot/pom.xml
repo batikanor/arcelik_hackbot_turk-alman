@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.arcelikglobal.turkalman-hackbot</groupId>
+  <artifactId>turkalman-hackbot</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>turkalman-hackbot</name>
+  <description>Arçelikglobal hackbot hackathon için 22-23 Temmuz 2020 de geliştirilen telegram botu</description>
+  <dependencies>
+	<!-- https://mvnrepository.com/artifact/org.telegram/telegrambots -->
+	<dependency>
+	    <groupId>org.telegram</groupId>
+	    <artifactId>telegrambots</artifactId>
+	    <version>4.9</version>
+	</dependency>
+  </dependencies>
+</project>
