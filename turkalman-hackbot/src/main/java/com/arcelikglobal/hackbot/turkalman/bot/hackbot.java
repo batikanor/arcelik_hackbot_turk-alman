@@ -80,6 +80,32 @@ public class hackbot extends TelegramLongPollingBot{
 							if (text.toLowerCase().contains(tag)) {
 								// Get answer of that tag
 								int questionId = map.get(tag);
+								ArrayList<String> ans = DBConnection.getAnswerFromQuestionId(questionId);
+								
+								// Ask if one of the below messages is of interest to the customer
+								if (ans != null) {
+									toSend.setText("Eğer aşağıdaki cevaplardan biri sorunuzu cevaplamıyorsa 'hayır' yazınız...");
+									toSend.setChatId(fromId);
+									try {
+										execute(toSend);
+									} catch (TelegramApiException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+									for (String a : ans) {
+										SendMessage guess = new SendMessage();
+										guess.setChatId(fromId);
+										guess.setText(a);
+										try {
+											execute(guess);
+										} catch (TelegramApiException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								}
+
+								
 							}
 						}
 						
