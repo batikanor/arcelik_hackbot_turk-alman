@@ -23,7 +23,7 @@ public class hackbot extends TelegramLongPollingBot{
 	private long botId = Long.parseLong("1301764983");
 	private long faqBotId;
 	
-	private String lastQuestion = null;
+	private int lastQuestionId = 0;
 
 	private long departmentChatId = Long.parseLong("-1001460310430");
 	
@@ -76,42 +76,102 @@ public class hackbot extends TelegramLongPollingBot{
 						
 						// CHECK IF IT WAS ALREADY TAGGED SOMEHOW
 						HashMap<String, Integer> map = DBConnection.getTags();
-						for (String tag : map.keySet()) {
-							if (text.toLowerCase().contains(tag)) {
-								// Get answer of that tag
-								int questionId = map.get(tag);
-								ArrayList<String> ans = DBConnection.getAnswerFromQuestionId(questionId);
+						
+						
+						if (map.keySet().isEmpty() || textLower.contentEquals("hayır") || textLower.contentEquals("hayir")){
+							if (map.keySet().isEmpty()) {
+								lastQuestionId = updateMessageId;
+							}
+							
+							System.out.println("should be forwarding");
+							
+							// To be replaced with the click on a (maybe inline) button
+							if (lastQuestionId != 0) {
 								
-								// Ask if one of the below messages is of interest to the customer
-								if (ans != null) {
-									toSend.setText("Eğer aşağıdaki cevaplardan biri sorunuzu cevaplamıyorsa 'hayır' yazınız...");
-									toSend.setChatId(fromId);
-									try {
-										execute(toSend);
-									} catch (TelegramApiException e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									}
-									for (String a : ans) {
-										SendMessage guess = new SendMessage();
-										guess.setChatId(fromId);
-										guess.setText(a);
+								toSend.setText("Son sorunuz ilgili departmana yonlendiriliyor");
+								//toSend.setReplyToMessageId(updateMessageId);
+								toSend.setChatId(fromId); ///< Bot needs to have been started etc...
+								//toSend.setChatId(batikansChatId);
+								
+								try {
+									execute(toSend);
+								} catch (TelegramApiException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+								// Forwaring message to the respective department
+								// !!!Department may be chosen regarding several factors during deployment phase
+								
+								forwardMessageToDepartment(fromId, updateMessageId);
+								
+								lastQuestionId = 0;
+								
+								try {
+									System.out.println(toSend.toString());
+									execute(toSend); ///< Sending message object to user
+									return;
+								} catch (TelegramApiException e) {
+									
+									e.printStackTrace();
+								}
+							
+								
+							}
+
+							
+	
+						} else {
+							lastQuestionId = updateMessageId;
+							for (String tag : map.keySet()) {
+								if (text.toLowerCase().contains(tag)) {
+									// Get answer of that tag
+									int questionId = map.get(tag);
+									ArrayList<String> ans = DBConnection.getAnswerFromQuestionId(questionId);
+									
+									// Ask if one of the below messages is of interest to the customer
+									if (ans != null) {
+										toSend.setText("Eğer aşağıdaki cevaplardan biri sorunuzu cevaplamıyorsa 'hayır' yazınız...");
+										toSend.setChatId(fromId);
 										try {
-											execute(guess);
+											execute(toSend);
+										} catch (TelegramApiException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+										for (String a : ans) {
+											SendMessage guess = new SendMessage();
+											guess.setChatId(fromId);
+											guess.setText(a);
+											try {
+												execute(guess);
+											} catch (TelegramApiException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}
+									} else {
+										toSend.setText("Sorunuza onceden verilmis bir cevap bulunamadı. Sorunuz ilgililere iletiliyor... Cevap bekleyiniz");
+									//BURADA BEKLEYECEGI ICIN MULTITHREADING LAZIM ASLINDA, AMA TEKRARDAN SORDURABILIRIZ
+										toSend.setChatId(fromId);
+										try {
+											execute(toSend);
 										} catch (TelegramApiException e) {
 											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
+										forwardMessageToDepartment(fromId, updateMessageId);
 									}
-								}
 
-								
+									
+								}
 							}
 						}
+
 						
-						if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) {
+						if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) { // DOESNT WORK ANYMORE
 							// To be replaced with the click on a (maybe inline) button
-								if (lastQuestion != null) {
+								if (lastQuestionId != 0) {
 									
 									toSend.setText("Son sorunuz ilgili departmana yonlendiriliyor");
 									//toSend.setReplyToMessageId(updateMessageId);
@@ -125,7 +185,7 @@ public class hackbot extends TelegramLongPollingBot{
 									
 									forwardMessageToDepartment(fromId, updateMessageId);
 									
-									lastQuestion = null;
+									lastQuestionId = 0;
 									
 									try {
 										System.out.println(toSend.toString());
@@ -142,7 +202,7 @@ public class hackbot extends TelegramLongPollingBot{
 								
 
 							} else {
-								lastQuestion = textLower; ///< Buyuk harfleri varken de kaydedilebilirlerdi...
+								lastQuestionId = updateMessageId; ///< Buyuk harfleri varken de kaydedilebilirlerdi...
 								
 							}
 					} else {
