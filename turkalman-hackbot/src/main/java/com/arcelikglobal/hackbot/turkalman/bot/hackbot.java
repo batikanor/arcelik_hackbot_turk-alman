@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.arcelikglobal.hackbot.turkalman.utilities.DBConnection;
+
 
 public class hackbot extends TelegramLongPollingBot{
 	// If you are helping develop this bot, please ensure that you do not share the following private variables with anyone!
@@ -110,11 +112,18 @@ public class hackbot extends TelegramLongPollingBot{
 								// THEN IT IS AN ANSWER
 								
 								
+								
 								// IF IT STARTS WITH TAG, IT IS A TAG.
 								if (msg.getText().toLowerCase().startsWith("tag")) {
 									// SAVE THE TAG TO DB
+									String[] tags = msg.getText().toLowerCase().substring(3).stripLeading().split(" ");
+									for (String tag : tags) {
+										DBConnection.addTag(msg.getReplyToMessage().getMessageId(), tag);
+									}
+
 								} else {
 									// SAVE THE ANSWER TO DB
+									DBConnection.addAnswer(msg.getReplyToMessage().getMessageId(), msg.getText());
 									
 								}
 							}
