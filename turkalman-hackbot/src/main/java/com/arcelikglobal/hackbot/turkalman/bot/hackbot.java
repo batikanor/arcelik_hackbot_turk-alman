@@ -1,6 +1,7 @@
 package com.arcelikglobal.hackbot.turkalman.bot;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 //import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 //import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -13,6 +14,11 @@ public class hackbot extends TelegramLongPollingBot{
 	private String botToken = "1301764983:AAFEhSz9q6gB-Lhn6BqS_eQXOwelWHEdZJY";
 	private String botUsername = "arcelik_hackbot"; ///< Without '@'
 	//private long batikansChatId = (long) 597803356; ///< For testing purposes
+	
+	
+	private String lastQuestion = null;
+
+	private long departmentChatId = Long.parseLong("-1001460310430");
 	
 	public void onUpdateReceived(Update update) {
 		//
@@ -29,6 +35,7 @@ public class hackbot extends TelegramLongPollingBot{
 			
 			
 			System.out.println(msg.toString());
+			System.out.println(msg.getChatId().toString());
 			
 			if (msg.getDice() != null) {
 				// basket, dart, dice ...
@@ -58,27 +65,45 @@ public class hackbot extends TelegramLongPollingBot{
 					//long chatId = msg.getChatId();
 					
 					long fromId = update.getMessage().getFrom().getId();
-					
-					if (textLower.contains("arcelik") || textLower.contains("arçelik")) {
-					
-						if (textLower.contains("'hey")) {
-							
-							
-							toSend.setText("Hey!");
-							//toSend.setReplyToMessageId(updateMessageId);
-							toSend.setChatId(fromId); ///< Bot needs to have been started etc...
-							//toSend.setChatId(batikansChatId);
-							try {
-								System.out.println(toSend.toString());
-								execute(toSend); ///< Sending message object to user
-								return;
-							} catch (TelegramApiException e) {
-								
-								e.printStackTrace();
-							} 
-						}
+					if (msg.getChatId() == fromId) { /// IF ON PRIVATE CHAT
+						if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) {
+							// To be replaced with the click on a (maybe inline) button
+								if (lastQuestion != null) {
+									
+									toSend.setText("Son sorunuz ilgili departmana yonlendiriliyor");
+									//toSend.setReplyToMessageId(updateMessageId);
+									toSend.setChatId(fromId); ///< Bot needs to have been started etc...
+									//toSend.setChatId(batikansChatId);
+									
 
+									
+									// Forwaring message to the respective department
+									// !!!Department may be chosen regarding several factors during deployment phase
+									
+									forwardMessageToDepartment(fromId, updateMessageId);
+									
+									lastQuestion = null;
+									
+									try {
+										System.out.println(toSend.toString());
+										execute(toSend); ///< Sending message object to user
+										return;
+									} catch (TelegramApiException e) {
+										
+										e.printStackTrace();
+									}
+								
+									
+								}
+
+								
+
+							} else {
+								lastQuestion = textLower; ///< Buyuk harfleri varken de kaydedilebilirlerdi...
+								
+							}
 					}
+					
 					
 
 					
@@ -150,6 +175,25 @@ public class hackbot extends TelegramLongPollingBot{
 		return botToken;
 	}
 
+	public boolean forwardMessageToDepartment(final long fromId, final int messageId ) {
+		// maybe take departmentChatId as parameter aswell
+		// 
+		
+		ForwardMessage fmsg = new ForwardMessage(departmentChatId, fromId, messageId);
+		
+		try {
+			execute(fmsg);
+			return true;
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+			
+		
+		return false;
 	
+		
+	}
+	 
 
 }

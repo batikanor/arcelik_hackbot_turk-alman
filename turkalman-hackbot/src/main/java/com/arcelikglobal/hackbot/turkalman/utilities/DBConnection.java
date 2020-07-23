@@ -46,9 +46,11 @@ public class DBConnection {
 		
 		try {
 			ps = con.prepareStatement("INSERT INTO QUESTIONS VALUES(?, ?)");
+		
 			ps.setInt(1, messageID);
 			ps.setString(2, question);
 			ps.executeUpdate();
+			
 			con.commit();
 			con.close();
 			return true;
