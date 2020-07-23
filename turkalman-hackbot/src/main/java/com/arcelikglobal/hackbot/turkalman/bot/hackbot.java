@@ -4,6 +4,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 //import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import java.util.ArrayList;
+
+import java.util.HashMap;
 //import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -69,6 +73,16 @@ public class hackbot extends TelegramLongPollingBot{
 					
 					long fromId = update.getMessage().getFrom().getId();
 					if (msg.getChatId() == fromId) { /// IF ON PRIVATE CHAT
+						
+						// CHECK IF IT WAS ALREADY TAGGED SOMEHOW
+						HashMap<String, Integer> map = DBConnection.getTags();
+						for (String tag : map.keySet()) {
+							if (text.toLowerCase().contains(tag)) {
+								// Get answer of that tag
+								int questionId = map.get(tag);
+							}
+						}
+						
 						if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) {
 							// To be replaced with the click on a (maybe inline) button
 								if (lastQuestion != null) {
@@ -108,7 +122,7 @@ public class hackbot extends TelegramLongPollingBot{
 					} else {
 						// On group chat, either with other bots or with a department
 						
-						// If the other bot had sent this bot a question
+						// If the other bot had sent this bot a question (THIS CANT BE USED ANYMORE, TELEGRAM HAS REMOVED IT :( )
 					//	if (msg.getFrom() == faqBotId) {
 							//
 						//}
