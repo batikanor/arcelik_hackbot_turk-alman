@@ -17,6 +17,7 @@ public class hackbot extends TelegramLongPollingBot{
 	private String botUsername = "arcelik_hackbot"; ///< Without '@'
 	//private long batikansChatId = (long) 597803356; ///< For testing purposes
 	private long botId = Long.parseLong("1301764983");
+	private long faqBotId;
 	
 	private String lastQuestion = null;
 
@@ -106,6 +107,12 @@ public class hackbot extends TelegramLongPollingBot{
 							}
 					} else {
 						// On group chat, either with other bots or with a department
+						
+						// If the other bot had sent this bot a question
+					//	if (msg.getFrom() == faqBotId) {
+							//
+						//}
+						
 						if (msg.getReplyToMessage() != null) {
 							if (msg.getReplyToMessage().getFrom().getId() == botId) {
 								// if this bots message is being replied to
@@ -199,11 +206,13 @@ public class hackbot extends TelegramLongPollingBot{
 	public String getBotToken() {
 	
 		return botToken;
+		
 	}
 
 	public boolean forwardMessageToDepartment(final long fromId, final int messageId ) {
+		
 		// maybe take departmentChatId as parameter aswell
-		// 
+	 
 		
 		ForwardMessage fmsg = new ForwardMessage(departmentChatId, fromId, messageId);
 		
