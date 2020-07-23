@@ -50,7 +50,13 @@ public class DBConnection {
 			ps.setInt(1, messageID);
 			ps.setString(2, question);
 			ps.executeUpdate();
+			con.commit();
+		
+			ps = con.prepareStatement("INSERT INTO ANSWERS VALUES(?,?)");
 			
+			ps.setInt(1, messageID);
+			ps.setString(2, answer);
+			ps.executeUpdate();
 			con.commit();
 			con.close();
 			return true;
