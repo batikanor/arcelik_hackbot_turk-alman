@@ -1,10 +1,12 @@
-package hackbot;
+package com.arcelikglobal.hackbot.turkalman.bot;
 
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+
+import com.arcelikglobal.hackbot.turkalman.utilities.DBConnection;
 public class Main {
 	
 	// Instantiate TelegramBotsApi and register the bot
@@ -22,8 +24,13 @@ public class Main {
 			System.out.println("Bot regisered succesfully");
 		} catch (TelegramApiRequestException e) {
 			
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
+		//DBConnection.connect();
+		//DBConnection.addEntry(2, "2deneme2", "mrb");
+	
+		
+		
 		
 	}
 	

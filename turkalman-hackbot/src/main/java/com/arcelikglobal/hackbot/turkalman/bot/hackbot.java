@@ -1,4 +1,4 @@
-package hackbot;
+package com.arcelikglobal.hackbot.turkalman.bot;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 //import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
@@ -15,7 +15,7 @@ public class hackbot extends TelegramLongPollingBot{
 	//private long batikansChatId = (long) 597803356; ///< For testing purposes
 	
 	public void onUpdateReceived(Update update) {
-		
+		//
 		//System.out.println(update.getInlineQuery().toString());
 		if (update.hasMessage()) {
 			
@@ -61,7 +61,7 @@ public class hackbot extends TelegramLongPollingBot{
 					
 					if (textLower.contains("arcelik") || textLower.contains("arçelik")) {
 					
-						if (textLower.contains("hey")) {
+						if (textLower.contains("'hey")) {
 							
 							
 							toSend.setText("Hey!");
@@ -86,9 +86,34 @@ public class hackbot extends TelegramLongPollingBot{
 					
 				}
 				
+				// musteriler 3 konuda dokunuyor, bilgi istemek, bir islem yapmak, bir konuda sikayette bulunmak
+				// bu 3 case tipi
+				// bayi sorabilir, bu urunu nereden alabilirm diye
+				// kampanya detaylari sorabilir
+				// butun bilgileri su an cagri merkezine yolluyorlar onlar cevapliyorlar
+				// siparisim nerde vs bilgi amacli sorular...
+				// iyi pisirmiyor, aldim fiyatini begenmedim vs.../
 				
 				
+				//mock data girip databaseye prototip olarak girmeye calisabilirsin bir seyleri
+				//juri ne yapmaya calistiginiza odaklanacaktir
 				
+				// nihai hedef musterinin cagri merkezini aramamasi, buna gerek olmamasi
+				// chatbot cevap veremedigii durumda ilgili departmana iletildi su kadar sure icerisinde cevap gelir seklinde tamamdir
+				
+				// operasyonel yonlendirmeler: Uye girisi yaparak kargonuzu takip edebilirsiniz
+				// mumkun oldugunda text analiz kismina gitme
+				// asil odak yonlendirme olsun yani!
+			
+				// musteri hangi sayfada ne kadar vakit gecirmis varmis gibi dusun bu bilgiler hazirda, ona gore kupon onerisi yapilabilir
+				
+				// musteri klimalari gezdi, odemeyle ilgili problem yasadi vs....
+				
+				// adaptiflik, entegre olabilirlik de sonrasi icin olmali
+				
+				// buzdolabi alicam mavi isik nedir
+				// klima alicam 9000 btu mu 10000 btu mu iyidir 
+			
 			} else {
 				// Message comes from another bot
 				toSend.setText("Botlardan gelen mesajlara cevap veremiyoruz, özür dileriz.");
