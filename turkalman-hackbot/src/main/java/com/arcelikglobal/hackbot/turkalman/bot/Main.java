@@ -29,7 +29,7 @@ public class Main {
 		//DBConnection.connect();
 		//DBConnection.addEntry(2, "2deneme2", "mrb");
 	
-		
+	
 		
 		
 	}

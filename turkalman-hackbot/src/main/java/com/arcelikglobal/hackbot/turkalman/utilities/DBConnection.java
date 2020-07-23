@@ -33,8 +33,32 @@ public class DBConnection {
 		}
 			
 	}
-	public static boolean addEntry(int messageID, String question, String answer) {
-		// Arcelik yetkilisinin alintiladigi yazi 'question', cevaben yazdigi sey ise 'answer'
+    
+    public static boolean addQuestion(int messageID, String question) {
+    	
+    	Connection con = connect();
+		PreparedStatement ps;
+		
+		
+		try {
+			ps = con.prepareStatement("INSERT INTO QUESTIONS VALUES(?, ?)");
+			ps.setInt(1, messageID);
+			ps.setString(2, question);
+			ps.executeUpdate();
+			con.commit();
+			con.close();
+			return true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+    }
+    
+	public static boolean addAnswer(int messageID, String answer) {
+	
 		
 		
 		Connection con = connect();
@@ -45,14 +69,8 @@ public class DBConnection {
 		
 		
 		try {
-			ps = con.prepareStatement("INSERT INTO QUESTIONS VALUES(?, ?)");
-		
-			ps.setInt(1, messageID);
-			ps.setString(2, question);
-			ps.executeUpdate();
-			con.commit();
-		
-			ps = con.prepareStatement("INSERT INTO ANSWERS VALUES(?,?)");
+
+			ps = con.prepareStatement("INSERT INTO ANSWERS(QUESTIONID, ANSWER) VALUES(?, ?)");
 			
 			ps.setInt(1, messageID);
 			ps.setString(2, answer);
@@ -60,12 +78,42 @@ public class DBConnection {
 			con.commit();
 			con.close();
 			return true;
+			
 		} catch (SQLException e) {
-			System.out.println("Soru veritabanina eklenemedi");
+			System.out.println("Cevap veritabanina eklenemedi"); ///< Normalde loglanir, henuz logging ile ugrasmadik
 			e.printStackTrace();
 			return false;
 		}
 	
+	}
+	
+	public static boolean addTag(int messageID, String tag) {
+		
+		
+		Connection con = connect();
+		
+		PreparedStatement ps;
+		
+		
+		
+		
+		try {
+
+			ps = con.prepareStatement("INSERT INTO TAGS(QUESTIONID, ANSWER) VALUES(?, ?)");
+			
+			ps.setInt(1, messageID);
+			ps.setString(2, tag);
+			ps.executeUpdate();
+			con.commit();
+			con.close();
+			
+			return true;
+			
+		} catch (SQLException e) {
+			System.out.println("Tag veritabanina eklenemedi"); ///< Normalde loglanir, henuz logging ile ugrasmadik
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

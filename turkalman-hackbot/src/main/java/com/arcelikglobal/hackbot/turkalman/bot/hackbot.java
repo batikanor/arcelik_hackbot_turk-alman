@@ -14,7 +14,7 @@ public class hackbot extends TelegramLongPollingBot{
 	private String botToken = "1301764983:AAFEhSz9q6gB-Lhn6BqS_eQXOwelWHEdZJY";
 	private String botUsername = "arcelik_hackbot"; ///< Without '@'
 	//private long batikansChatId = (long) 597803356; ///< For testing purposes
-	
+	private long botId = Long.parseLong("1301764983");
 	
 	private String lastQuestion = null;
 
@@ -102,6 +102,23 @@ public class hackbot extends TelegramLongPollingBot{
 								lastQuestion = textLower; ///< Buyuk harfleri varken de kaydedilebilirlerdi...
 								
 							}
+					} else {
+						// On group chat, either with other bots or with a department
+						if (msg.getReplyToMessage() != null) {
+							if (msg.getReplyToMessage().getFrom().getId() == botId) {
+								// if this bots message is being replied to
+								// THEN IT IS AN ANSWER
+								
+								
+								// IF IT STARTS WITH TAG, IT IS A TAG.
+								if (msg.getText().toLowerCase().startsWith("tag")) {
+									// SAVE THE TAG TO DB
+								} else {
+									// SAVE THE ANSWER TO DB
+									
+								}
+							}
+						}
 					}
 					
 					
@@ -120,8 +137,8 @@ public class hackbot extends TelegramLongPollingBot{
 				// iyi pisirmiyor, aldim fiyatini begenmedim vs.../
 				
 				
-				//mock data girip databaseye prototip olarak girmeye calisabilirsin bir seyleri
-				//juri ne yapmaya calistiginiza odaklanacaktir
+				// mock data girip databaseye prototip olarak girmeye calisabilirsin bir seyleri
+				// juri ne yapmaya calistigimiza odaklanacaktir
 				
 				// nihai hedef musterinin cagri merkezini aramamasi, buna gerek olmamasi
 				// chatbot cevap veremedigii durumda ilgili departmana iletildi su kadar sure icerisinde cevap gelir seklinde tamamdir
