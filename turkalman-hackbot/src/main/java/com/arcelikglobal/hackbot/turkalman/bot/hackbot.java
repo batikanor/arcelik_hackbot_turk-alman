@@ -21,7 +21,7 @@ public class hackbot extends TelegramLongPollingBot{
 	private String botUsername = "arcelik_hackbot"; ///< Without '@'
 	//private long batikansChatId = (long) 597803356; ///< For testing purposes
 	private long botId = Long.parseLong("1301764983");
-	private long faqBotId;
+	//private long faqBotId;
 	
 	private int lastQuestionId = 0;
 
@@ -75,12 +75,17 @@ public class hackbot extends TelegramLongPollingBot{
 					if (msg.getChatId() == fromId) { /// IF ON PRIVATE CHAT
 						
 						// CHECK IF IT WAS ALREADY TAGGED SOMEHOW
+						System.out.println("Taglere bakiliyor");
 						HashMap<String, Integer> map = DBConnection.getTags();
+						System.out.println(map);
+
+						// check if tag was in answer
 						
 						
 						if (map.keySet().isEmpty() || textLower.contentEquals("hayır") || textLower.contentEquals("hayir")){
-							if (map.keySet().isEmpty()) {
+							if (map.keySet().isEmpty()  && !textLower.contentEquals("hayır") && !textLower.contentEquals("hayir")) {
 								lastQuestionId = updateMessageId;
+								System.out.println("changed it");
 							}
 							
 							System.out.println("should be forwarding");
@@ -122,6 +127,7 @@ public class hackbot extends TelegramLongPollingBot{
 							
 	
 						} else {
+						
 							lastQuestionId = updateMessageId;
 							for (String tag : map.keySet()) {
 								if (text.toLowerCase().contains(tag)) {
@@ -169,42 +175,39 @@ public class hackbot extends TelegramLongPollingBot{
 						}
 
 						
-						if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) { // DOESNT WORK ANYMORE
-							// To be replaced with the click on a (maybe inline) button
-								if (lastQuestionId != 0) {
-									
-									toSend.setText("Son sorunuz ilgili departmana yonlendiriliyor");
-									//toSend.setReplyToMessageId(updateMessageId);
-									toSend.setChatId(fromId); ///< Bot needs to have been started etc...
-									//toSend.setChatId(batikansChatId);
-									
-
-									
-									// Forwaring message to the respective department
-									// !!!Department may be chosen regarding several factors during deployment phase
-									
-									forwardMessageToDepartment(fromId, updateMessageId);
-									
-									lastQuestionId = 0;
-									
-									try {
-										System.out.println(toSend.toString());
-										execute(toSend); ///< Sending message object to user
-										return;
-									} catch (TelegramApiException e) {
-										
-										e.printStackTrace();
-									}
-								
-									
-								}
-
-								
-
-							} else {
-								lastQuestionId = updateMessageId; ///< Buyuk harfleri varken de kaydedilebilirlerdi...
-								
-							}
+						/*
+						 * if (textLower.contentEquals("hayır") || textLower.contentEquals("hayir")) {
+						 * // DOESNT WORK ANYMORE // To be replaced with the click on a (maybe inline)
+						 * button if (lastQuestionId != 0) {
+						 * 
+						 * toSend.setText("Son sorunuz ilgili departmana yonlendiriliyor");
+						 * //toSend.setReplyToMessageId(updateMessageId); toSend.setChatId(fromId); ///<
+						 * Bot needs to have been started etc... //toSend.setChatId(batikansChatId);
+						 * 
+						 * 
+						 * 
+						 * // Forwaring message to the respective department // !!!Department may be
+						 * chosen regarding several factors during deployment phase
+						 * 
+						 * forwardMessageToDepartment(fromId, updateMessageId);
+						 * 
+						 * lastQuestionId = 0;
+						 * 
+						 * try { System.out.println(toSend.toString()); execute(toSend); ///< Sending
+						 * message object to user return; } catch (TelegramApiException e) {
+						 * 
+						 * e.printStackTrace(); }
+						 * 
+						 * 
+						 * }
+						 * 
+						 * 
+						 * 
+						 * } else { lastQuestionId = updateMessageId; ///< Buyuk harfleri varken de
+						 * kaydedilebilirlerdi...
+						 * 
+						 * }
+						 */
 					} else {
 						// On group chat, either with other bots or with a department
 						
@@ -226,12 +229,14 @@ public class hackbot extends TelegramLongPollingBot{
 									String[] tags = msg.getText().toLowerCase().substring(3).stripLeading().split(" ");
 									for (String tag : tags) {
 										DBConnection.addTag(msg.getReplyToMessage().getMessageId(), tag);
+										System.out.println("cevaba tag olarak su eklendi:" + tag);
 									}
+									
 
 								} else {
 									// SAVE THE ANSWER TO DB
 									DBConnection.addAnswer(msg.getReplyToMessage().getMessageId(), msg.getText());
-									
+									System.out.println("cevap kaydedildi");
 								}
 							}
 						}

@@ -103,7 +103,7 @@ public class DBConnection {
 		
 		try {
 
-			ps = con.prepareStatement("INSERT INTO TAGS(QUESTIONID, ANSWER) VALUES(?, ?)");
+			ps = con.prepareStatement("INSERT INTO TAGS(QUESTIONID, TAG) VALUES(?, ?)");
 			
 			ps.setInt(1, messageID);
 			ps.setString(2, tag);
